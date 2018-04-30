@@ -225,7 +225,7 @@
 	
 	\section{Solution}
 	\subsection{cryptdomainmgr}
-	\begin{frame}
+	\begin{frame}{\insertsection}{\insertsubsection}
 		\textbf{autorenew} 
 		\begin{itemize}
 			\item prepare
@@ -252,6 +252,125 @@
 		\end{itemize}
 	\end{frame}
 	
+	\section{cryptdomainmgr}
+	\subsection{structure}
+	\begin{frame}{\insertsection}{\insertsubsection}
+		\begin{itemize}
+			\item cryptdomainmgr
+			\begin{itemize}
+				\item dnsuptools
+				\begin{itemize}
+					\item domrobot
+				\end{itemize}
+				\item certbot
+			\end{itemize}
+		\end{itemize}
+	\end{frame}	
+	
+\subsection{update cycle}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragiel: no indentation allowed
+	\textbf{update -- set a, aaaa, srv, dmarc, spf, adsp}
+	\begin{verbatim}
+		~/cryptdomainmgr$ ./update.py inwxcred.conf example.conf
+	\end{verbatim}
+	\vspace{0.3cm}
+	\textbf{prepare cycle -- generate Cert, TLSA, DKIM}
+	\begin{verbatim}
+	~/cryptdomainmgr$ ./prepare.py inwxcred.conf example.conf
+	\end{verbatim}
+	\vspace{0.3cm}
+	\textbf{rollover cycle -- use Cert, TLSA, DKIM}
+	\begin{verbatim}
+	~/cryptdomainmgr$ ./rollover.py inwxcred.conf example.conf
+	\end{verbatim}
+	\vspace{0.3cm}
+	\textbf{cleanup cycle -- remove outdated}
+	\begin{verbatim}
+	~/cryptdomainmgr$ ./cleanup.py inwxcred.conf example.conf
+	\end{verbatim}
+\end{frame}	
+
+\subsection{configuration}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{DNS credential}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat inwxcred.conf
+	
+	[domain]
+	user = myusername
+	passwd = mypassword
+	\end{verbatim}
+\end{frame}		
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{certificate configuration}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[certificate]
+	generator = certbot
+	email = stefan.helmert@t-online.de
+	keysize = 4096
+	
+	[certificate:maincert]
+	destination = /etc/ssl
+	extraflags = --staging, --renew-with-new-domains, --hsts
+	certname = fullchain.pem
+	\end{verbatim}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{dkim configuration}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[dkim]
+	generator = rspamd
+	
+	[dkim:maindkim]
+	signingConfTemplateFile = ~/cryptdomainmgr/dkim_signing_template.conf
+	signingConfTemporaryFile = /etc/rspamd/dkim_signing_new.conf
+	signingConfDestinationFile = /etc/rspamd/local.d/dkim_signing.conf
+	\end{verbatim}
+\end{frame}	
+	
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain]
+	user = myusername
+	handler = dnsuptools
+	
+	[domain:domain.example]
+	soa.hostmaster = stefan.helmert@t-online.de
+	soa.refresh = 7200
+	
+	[domain:sub.domain.example]
+	ip4 = auto, 192.168.0.1
+	ip6+ = auto, 0ffc::0030
+	mx = mail20.domain.example:20, mail30.domain.example:30
+	mx.40 = mail40.domain.example, mail50.domain.example:50
+	mx.10+= mail10.domain.example
+	\end{verbatim}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- combine stuff}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+
+	[domain:sub.domain.example]	
+	tlsa = 3 0 1, 3 1 1
+	certificate = maincert
+	dkim = maindkim
+	
+
+	\end{verbatim}
+\end{frame}	
+
+
 \end{document}
 
 
