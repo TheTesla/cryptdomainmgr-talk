@@ -225,8 +225,8 @@
 		$\rightarrow$ to do
 	\end{frame}
 	
-	\section{Solution}
-	\subsection{cryptdomainmgr}
+	\section{Cryptdomainmgr}
+	\subsection{autorenew process}
 	\begin{frame}{\insertsection}{\insertsubsection}
 		\textbf{autorenew} 
 		\begin{itemize}
@@ -254,7 +254,7 @@
 		\end{itemize}
 	\end{frame}
 	
-	\section{cryptdomainmgr}
+
 	\subsection{structure}
 	\begin{frame}{\insertsection}{\insertsubsection}
 		\begin{itemize}
@@ -292,7 +292,8 @@
 	\end{verbatim}
 \end{frame}	
 
-\subsection{configuration}
+\section{Configuration}
+\subsection{DNS credential}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{DNS credential}
 	\begin{verbatim}
@@ -304,8 +305,8 @@
 	\end{verbatim}
 \end{frame}		
 
+\subsection{Certificates}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{certificate configuration}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -324,8 +325,8 @@
 	\end{itemize}
 \end{frame}	
 
+\subsection{DKIM}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{dkim configuration}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -339,8 +340,8 @@
 	\end{verbatim}
 \end{frame}	
 	
+\subsection{Domain}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -362,7 +363,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration details}
+	\textbf{set A record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -377,7 +378,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration details}
+	\textbf{add A record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -392,7 +393,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration details}
+	\textbf{set MX record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -411,7 +412,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration}
+	\textbf{set MX record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 		
@@ -430,7 +431,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- same for SRV}
+	\textbf{set SRV record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -441,7 +442,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- DMARC update!}
+	\textbf{set DMARC entries}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -459,7 +460,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- DMARC update!}
+	\textbf{set DMARC record}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -478,7 +479,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- SOA update!}
+	\textbf{set SOA entries}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -495,7 +496,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- SPF update!}
+	\textbf{set SPF flags}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -511,7 +512,7 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- ADSP and CAA records}
+	\textbf{set ADSP and CAA records}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 	
@@ -529,7 +530,7 @@
 
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{domain configuration -- combine stuff}
+	\textbf{combine stuff -- TLSA and DKIM}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
 
