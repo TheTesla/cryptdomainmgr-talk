@@ -22,6 +22,7 @@
 \usepackage{scrextend}
 \usepackage{color, colortbl}
 \usepackage{ulem}
+\usepackage{multicol}
 
 
 % There are many different themes available for Beamer. A comprehensive
@@ -93,7 +94,7 @@
 % - Not really informative to the audience, more for people (including
 %   yourself) who are reading the slides online
 
-\subject{Bildverarbeitung}
+\subject{Cryptdomainmgr}
 % This is only inserted into the PDF information catalog. Can be left
 % out. 
 
@@ -121,7 +122,9 @@
 	\end{frame}
 	
 	\begin{frame}{Content}
+		\begin{multicols}{2}
 		\tableofcontents
+		\end{multicols}
 		% You might wish to add the option [pausesections]
 	\end{frame}
 	
@@ -224,11 +227,37 @@
 		\end{itemize}
 		$\rightarrow$ to do
 	\end{frame}
-	
+
+	\subsection{additional DNS records}
+	\begin{frame}{\insertsection}{\insertsubsection}
+		\textbf{CAA -- Certification Authority Authorization}
+		\begin{itemize}
+			\item specifies allowed CA
+			\item checked by CA
+		\end{itemize}
+		\textbf{SPF -- Sender Policy Framework} 
+		\begin{itemize}
+			\item which server is allowed to send email
+		\end{itemize}
+		\textbf{ADSP -- Author Domain Signing Practices}
+		\begin{itemize}
+			\item defines, if email must be DKIM signed
+		\end{itemize}	
+		\textbf{DMARC -- Domain-based Message Authentication, Reporting and Conformance}
+		\begin{itemize}
+			\item successor of SPF and ADSP
+			\item overrides SPF and ADSP
+			\item additional parameters: report email
+		\end{itemize}
+		\textbf{SRV -- Service}
+		\begin{itemize}
+			\item announces services
+		\end{itemize}
+	\end{frame}
+		
 	\section{Cryptdomainmgr}
 	\subsection{autorenew process}
 	\begin{frame}{\insertsection}{\insertsubsection}
-		\textbf{autorenew} 
 		\begin{itemize}
 			\item prepare
 			\begin{itemize}
@@ -295,7 +324,6 @@
 \section{Configuration}
 \subsection{DNS credential}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
-	\textbf{DNS credential}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat inwxcred.conf
 	
