@@ -21,6 +21,8 @@
 \usepackage{ziffer}
 \usepackage{scrextend}
 \usepackage{color, colortbl}
+\usepackage{ulem}
+
 
 % There are many different themes available for Beamer. A comprehensive
 % list with examples is given here:
@@ -317,6 +319,9 @@
 	extraflags = --staging, --renew-with-new-domains, --hsts
 	certname = fullchain.pem
 	\end{verbatim}
+	\begin{itemize}
+		\item multiple domains using \texttt{maincert} $\rightarrow$ SAN certificate
+	\end{itemize}
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
@@ -357,6 +362,173 @@
 \end{frame}	
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration details}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	ip4 = auto, 192.168.0.1
+	\end{verbatim}
+	means:
+	\begin{itemize}
+		\item add external ip and \texttt{192.168.0.1} to sub.domain.example
+		\item delete all other A records of sub.domain.example
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration details}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	ip4+ = auto, 192.168.0.1
+	\end{verbatim}
+	means:
+	\begin{itemize}
+		\item add external ip and \texttt{192.168.0.1} to sub.domain.example
+		\item \sout{delete all other A records of sub.domain.example}
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration details}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	mx = mail20.domain.example:20, mail30.domain.example:30
+	\end{verbatim}
+	means:
+	\begin{itemize}
+		\item add MX records
+		\begin{itemize}
+			\item mail20.domain.example with prio 20
+			\item mail30.domain.example with prio 30
+		\end{itemize}
+		\item delete all other MX records from sub.domain.example
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+		
+	[domain:sub.domain.example]
+	mx.40 = mail40.domain.example, mail50.domain.example:50
+	\end{verbatim}
+	means:
+	\begin{itemize}
+		\item add MX records
+		\begin{itemize}
+			\item mail40.domain.example with prio 40
+			\item mail50.domain.example with prio 50
+		\end{itemize}
+		\item delete all other MX records with prio 40 from sub.domain.example
+	\end{itemize}	
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- same for SRV}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	srv.service.proto.port.weight.prio 
+	= sub.domain.example:PRIO:WEIGHT:PORT:PROTO:SERVICE
+	\end{verbatim}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- DMARC update!}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	dmarc.p = quarantine
+	dmarc.rua = mailto:stefan.helmert@t-online.de
+	dmarc.ruf = mailto:stefan.helmert@gmx.net
+	\end{verbatim}
+	\begin{itemize}
+		\item changes the entries \texttt{p}, \texttt{rua}, \texttt{ruf} of the \texttt{DMARC} record
+		\item entries \texttt{adkim}, \texttt{aspf}, \texttt{pct} do not change
+		\item "`atomic"' operation
+		\item only one \texttt{DMARC} record allowed!
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- DMARC update!}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:sub.domain.example]
+	dmarc =
+	dmarc.p = quarantine
+	dmarc.rua = mailto:stefan.helmert@t-online.de
+	dmarc.ruf = mailto:stefan.helmert@gmx.net
+	\end{verbatim}
+	\begin{itemize}
+		\item changes the entries \texttt{p}, \texttt{rua}, \texttt{ruf} of the \texttt{DMARC} record
+		\item remove all other entries of this record
+		\item "`atomic"' operation
+		\item at most one \texttt{DMARC} record allowed!
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- SOA update!}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:domain.example]
+	soa.hostmaster = stefan.helmert@t-online.de
+	soa.refresh = 7200
+	\end{verbatim}
+	\begin{itemize}
+		\item changes the entries \texttt{hostmaster}, \texttt{refresh} of the \texttt{SOA} record
+		\item \texttt{primns}, \texttt{serial}, \texttt{retry}, \texttt{expire}, \texttt{ncttl} not changed
+		\item "`atomic"' operation
+		\item exact one \texttt{SOA} record in top level allowed!
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- SPF update!}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:domain.example]
+	spf = -mx, a, ?all, +aaaa
+	\end{verbatim}
+	\begin{itemize}
+		\item add given flags to \texttt{SPF} record
+		\item remove all other flags from \texttt{SPF} record
+		\item "`atomic"' operation
+		\item at most one \texttt{SPF} record in allowed!
+	\end{itemize}
+\end{frame}	
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\textbf{domain configuration -- ADSP and CAA records}
+	\begin{verbatim}
+	~/cryptdomainmgr$ cat example.conf
+	
+	[domain:domain.example]
+	adsp = all
+	caa =   0 issue letsdecrypt.org,
+	      128 issuewild examplecert.example
+	\end{verbatim}
+	\begin{itemize}
+		\item atomic update \texttt{ADSP} record
+		\item add the \texttt{CAA} records
+		\item remove all other \texttt{CAA} records
+	\end{itemize}
+\end{frame}	
+
+
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{domain configuration -- combine stuff}
 	\begin{verbatim}
 	~/cryptdomainmgr$ cat example.conf
@@ -365,11 +537,61 @@
 	tlsa = 3 0 1, 3 1 1
 	certificate = maincert
 	dkim = maindkim
-	
-
 	\end{verbatim}
+	\textbf{prepare cycle}
+	\begin{itemize}
+		\item add \texttt{TLSA} and \texttt{DKIM} records
+	\end{itemize}
+	\textbf{rollover cycle}
+	\begin{itemize}
+		\item no DNS changes
+		\item apply certificates and keys on server
+	\end{itemize}	\textbf{cleanup cycle}
+	\begin{itemize}
+		\item add \texttt{TLSA} and \texttt{DKIM} records (again)
+		\item remove all other \texttt{TLSA} and \texttt{DKIM} records
+	\end{itemize}	
 \end{frame}	
 
+\section{Implementation}
+\subsection{cryptdomainmgr}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\begin{description}
+		\item[cryptdomainmgr.py] core, brings everything together
+		\item[cdmconfighandler.py] reads/interpretes config (ini) files
+		\item[update.py] command line interface for generic DNS update
+		\item[prepare.py] command line interface for prepare cycle
+		\item[rollover.py] command line interface for rollover cycle
+		\item[cleanup.py] command line interface for cleanup cycle
+		\item[simplelogger/] logging abstraction, password $\rightarrow$ *****
+		\item[dnsuptools/] domrobot interface abstraction, TLSA, DKIM calculation
+	\end{description}	
+\end{frame}	
+
+\subsection{simplelogger} \label{sec:simplelogger}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\begin{description}
+		\item[simplelogger.py] core, produces output
+		\item[deepops.py] deep dict/list operations, password $\rightarrow$ *****
+	\end{description}	
+\end{frame}	
+
+\subsection{dnsuptools}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\begin{description}
+		\item[dnsuptools.py] core, high level, record change \& query methods
+		\item[dnsupdate.py] interface to domrobot, low level
+		\item[dkimrecgen.py] reads/interpretes dkim key file
+		\item[tlsarecgen.py] reads/interpretes certificate file
+		\item[simplelogger/] see simplelogger \ref{sec:simplelogger}
+		\item[inwxclient/] domrobot client
+	\end{description}	
+\end{frame}	
+
+\section{Discussion}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+  \Huge{???}	
+\end{frame}	
 
 \end{document}
 
