@@ -190,6 +190,7 @@
 	\section{Basics}
 	\subsection{SSL Certifcate}
 	\begin{frame}{\insertsection}{\insertsubsection}
+		\includegraphics[height=3cm]{integrity.eps}
 		\begin{itemize}
 			\item authentication (phishing)
 			\item integrity (man in the middle)
@@ -206,6 +207,12 @@
 			\item locks certificate to domain/DNS (fraudulent CA, stolen cert)
 		\end{itemize}
 		$\rightarrow$ to do \\
+		
+		\textbf{CAA -- Certification Authority Authorization}
+		\begin{itemize}
+			\item specifies allowed CA
+			\item checked by CA
+		\end{itemize}
 	\end{frame}	
 	
 	\subsection{DNSSEC}
@@ -230,11 +237,7 @@
 
 	\subsection{additional DNS records}
 	\begin{frame}{\insertsection}{\insertsubsection}
-		\textbf{CAA -- Certification Authority Authorization}
-		\begin{itemize}
-			\item specifies allowed CA
-			\item checked by CA
-		\end{itemize}
+
 		\textbf{SPF -- Sender Policy Framework} 
 		\begin{itemize}
 			\item which server is allowed to send email
@@ -535,7 +538,7 @@
 		\item add given flags to \texttt{SPF} record
 		\item remove all other flags from \texttt{SPF} record
 		\item "`atomic"' operation
-		\item at most one \texttt{SPF} record in allowed!
+		\item at most one \texttt{SPF} record is allowed!
 	\end{itemize}
 \end{frame}	
 
