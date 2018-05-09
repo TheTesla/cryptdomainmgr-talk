@@ -1,0 +1,16 @@
+\documentclass[border=10pt]{standalone}
+\usepackage{pgfplots}
+
+\begin{document}
+
+
+\tikz \draw[scale=1,domain=0:16,variable=\t,samples=200]
+
+plot ({\t},{0.15*(sign(cos(360*\t))-1)*cos(360*\t)})
+plot ({0.15*(sign(cos(360*\t/1.6))-1)*cos(360*\t/1.6)},{\t/1.6})
+plot ({16-0.15*(sign(cos(360*\t/1.6))-1)*cos(360*\t/1.6)},{\t/1.6})
+plot ({\t},{10-0.15*(sign(cos(360*\t))-1)*cos(360*\t)});
+
+
+
+\end{document}
