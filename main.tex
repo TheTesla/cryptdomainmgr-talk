@@ -381,9 +381,12 @@
 	generator = rspamd
 	
 	[dkim:maindkim]
-	signingConfTemplateFile = ~/cryptdomainmgr/dkim_signing_template.conf
-	signingConfTemporaryFile = /etc/rspamd/dkim_signing_new.conf
-	signingConfDestinationFile = /etc/rspamd/local.d/dkim_signing.conf
+	signingConfTemplateFile
+	  = ~/cryptdomainmgr/dkim_signing_template.conf
+	signingConfTemporaryFile
+	  = /etc/rspamd/dkim_signing_new.conf
+	signingConfDestinationFile
+	  = /etc/rspamd/local.d/dkim_signing.conf
 	\end{verbatim}
 \end{frame}	
 	
@@ -484,7 +487,7 @@
 	
 	[domain:sub.domain.example]
 	srv.service.proto.port.weight.prio 
-	= sub.domain.example:PRIO:WEIGHT:PORT:PROTO:SERVICE
+	  = sub.domain.example:PRIO:WEIGHT:PORT:PROTO:SERVICE
 	\end{verbatim}
 \end{frame}	
 
