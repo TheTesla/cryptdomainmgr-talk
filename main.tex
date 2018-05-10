@@ -63,9 +63,10 @@
 
 \definecolor{tucinfo}{rgb}{0.49,0.6,0.16}
 \definecolor{LightCyan}{rgb}{0.88,1,1}
+\definecolor{Blue}{rgb}{0,0,1}
 
-\setbeamercolor{title}{fg=tucinfo}
-\setbeamercolor{structure}{fg=tucinfo}
+\setbeamercolor{title}{fg=Blue}
+\setbeamercolor{structure}{fg=Blue}
 
 
 \title{cryptdomainmgr}
@@ -201,7 +202,7 @@
 	
 	\subsection{TLSA}
 	\begin{frame}{\insertsection}{\insertsubsection}
-		\textbf{DANE -- DNS-based Authentication of Named Entities}\\		\includegraphics[height=3cm]{TLSA.pdf}\\
+		\textbf{DANE -- DNS-based Authentication of Named Entities}\\		\includegraphics[height=3.8cm]{TLSA.pdf}\\
 		\textbf{TLSA -- Transport Layer Security Authentication} 
 		\begin{itemize}
 			\item locks certificate to domain/DNS (fraudulent CA, stolen cert)
@@ -211,7 +212,7 @@
 	
 	\subsection{CAA}
 	\begin{frame}{\insertsection}{\insertsubsection}
-		\includegraphics[height=4cm]{CAA.pdf}\\
+		\includegraphics[height=4.5cm]{CAA.pdf}\\
 		\textbf{CAA -- Certification Authority Authorization}
 		\begin{itemize}
 			\item specifies allowed CA
