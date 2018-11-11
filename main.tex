@@ -11,7 +11,8 @@
 % notice. 
 
 \documentclass{beamer}
-
+\usepackage{tikz}
+\usetikzlibrary{trees}
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphics}
@@ -227,6 +228,7 @@
 		\begin{itemize}
 			\item authenticate domain owner
 			\item integrity (DNS cache poisoning)
+			\item proof of nonexistence
 		\end{itemize}
 		$\rightarrow$ done by domain provider
 	\end{frame}
@@ -304,40 +306,95 @@
 	\end{frame}
 	
 
-	\subsection{structure}
-	\begin{frame}{\insertsection}{\insertsubsection}
-		\begin{itemize}
-			\item cryptdomainmgr
-			\begin{itemize}
-				\item dnsuptools
-				\begin{itemize}
-					\item domrobot
-				\end{itemize}
-				\item certbot
-			\end{itemize}
-		\end{itemize}
-	\end{frame}	
+\subsection{structure}
+\begin{frame}{\insertsection}{\insertsubsection}
+\tikzstyle{every node}=[draw=orange,fill=orange!20,thick,anchor=west]
+\tikzstyle{root}=[draw=white,fill=blue!10]
+\tikzstyle{none}=[draw=white,fill=white]
+\tikzstyle{file}=[draw=black,fill=white]
+\begin{tikzpicture}[%
+grow via three points={one child at (0.5,-0.7) and
+	two children at (0.5,-0.7) and (0.5,-1.4)},
+edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+\node [root] {cryptdomainmgr}
+child { node [file] {\_\_main\_\_.py}}	
+child { node [file] {\_\_init\_\_.py}}			
+child { node {modules}
+	child { node [none] {...}}	
+}
+child [missing] {}				
+child { node [file] {cdmcore.py}}
+child { node [file] {cdmstatehandler.py}}								
+child { node [file] {cdmconfighandler.py}};
+\end{tikzpicture}
+\end{frame}	
+	
+\begin{frame}{\insertsection}{\insertsubsection}
+	\tikzstyle{every node}=[draw=orange,fill=orange!20,thick,anchor=west]
+	\tikzstyle{root}=[draw=white,fill=blue!10]
+	\tikzstyle{none}=[draw=white,fill=white]
+	\tikzstyle{file}=[draw=black,fill=white]
+	\begin{tikzpicture}[%
+	grow via three points={one child at (0.5,-0.7) and
+		two children at (0.5,-0.7) and (0.5,-1.4)},
+	edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+	\node [root] {cryptdomainmgr}	
+	child { node [none] {...}}
+	child { node {modules}
+		child { node {common}}
+		child { node {cdm}}
+		child { node {cert}}
+		child { node {dkim}}
+		child { node {domain}}
+		child { node {service}}
+	};
+	\end{tikzpicture}
+\end{frame}	
+	
+\begin{frame}{\insertsection}{\insertsubsection}
+	\tikzstyle{every node}=[draw=orange,fill=orange!20,thick,anchor=west]
+	\tikzstyle{dirdot}=[draw=white,fill=orange!20,thick,anchor=west]
+	\tikzstyle{root}=[draw=white,fill=blue!10]
+	\tikzstyle{none}=[draw=white,fill=white]
+	\tikzstyle{file}=[draw=black,fill=white]
+	\begin{tikzpicture}[%
+	grow via three points={one child at (0.5,-0.7) and
+		two children at (0.5,-0.7) and (0.5,-1.4)},
+	edge from parent path={(\tikzparentnode.south) |- (\tikzchildnode.west)}]
+	\node [root] {cryptdomainmgr}	
+	child { node [none] {...}}
+	child { node {modules}
+		child { node [dirdot] {...}}
+		child { node {domain}
+			child { node [file] {\_\_init\_\_.py}}		
+			child { node [file] {main.py}}		
+			child { node [file] {confighandler.py}}		
+			child { node [file] {handlerdnsuptools.py}}		
+		}
+	};
+	\end{tikzpicture}
+\end{frame}	
 	
 \subsection{update cycle}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragiel: no indentation allowed
 	\textbf{update -- set a, aaaa, srv, dmarc, spf, adsp}
 	\begin{verbatim}
-		~/cryptdomainmgr$ ./update.py inwxcred.conf example.conf
+	$ python -m cryptdomainmgr --update cred.cnf exmpl.cnf
 	\end{verbatim}
 	\vspace{0.3cm}
 	\textbf{prepare cycle -- generate Cert, TLSA, DKIM}
 	\begin{verbatim}
-	~/cryptdomainmgr$ ./prepare.py inwxcred.conf example.conf
+	$ python -m cryptdomainmgr --prepare cred.cnf exmpl.cnf
 	\end{verbatim}
 	\vspace{0.3cm}
 	\textbf{rollover cycle -- use Cert, TLSA, DKIM}
 	\begin{verbatim}
-	~/cryptdomainmgr$ ./rollover.py inwxcred.conf example.conf
+	$ python -m cryptdomainmgr --rollover cred.cnf exmpl.cnf
 	\end{verbatim}
 	\vspace{0.3cm}
 	\textbf{cleanup cycle -- remove outdated}
 	\begin{verbatim}
-	~/cryptdomainmgr$ ./cleanup.py inwxcred.conf example.conf
+	$ python -m cryptdomainmgr --cleanup cred.cnf exmpl.cnf
 	\end{verbatim}
 \end{frame}	
 
@@ -345,7 +402,7 @@
 \subsection{DNS credential}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat inwxcred.conf
+	$ cat cred.cnf
 	
 	[domain]
 	user = myusername
@@ -356,16 +413,16 @@
 \subsection{Certificates}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 	
-	[certificate]
-	generator = certbot
+	[cert]
+	handler = dehydrated
 	email = stefan.helmert@t-online.de
 	keysize = 4096
 	
 	[certificate:maincert]
 	destination = /etc/ssl
-	extraflags = --staging, --renew-with-new-domains, --hsts
+	extraflags = --staging, -x
 	certname = fullchain.pem
 	\end{verbatim}
 	\begin{itemize}
@@ -376,14 +433,14 @@
 \subsection{DKIM}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 	
 	[dkim]
-	generator = rspamd
+	handler = rspamd
 	
 	[dkim:maindkim]
 	signingConfTemplateFile
-	  = ~/cryptdomainmgr/dkim_signing_template.conf
+	  = /etc/cryptdomainmgr/dkim_signing_template.conf
 	signingConfTemporaryFile
 	  = /etc/rspamd/dkim_signing_new.conf
 	signingConfDestinationFile
@@ -394,11 +451,11 @@
 \subsection{Domain}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 	
 	[domain]
 	user = myusername
-	handler = dnsuptools
+	handler = dnsuptools/inwx
 	
 	[domain:domain.example]
 	soa.hostmaster = stefan.helmert@t-online.de
@@ -416,7 +473,7 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set A record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 	
 	[domain:sub.domain.example]
 	ip4 = auto, 192.168.0.1
@@ -431,7 +488,7 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{add A record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 	
 	[domain:sub.domain.example]
 	ip4+ = auto, 192.168.0.1
@@ -446,8 +503,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set MX record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:sub.domain.example]
 	mx = mail20.domain.example:20, mail30.domain.example:30
 	\end{verbatim}
@@ -465,8 +522,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set MX record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-		
+	$ cat exmpl.cnf
+			
 	[domain:sub.domain.example]
 	mx.40 = mail40.domain.example, mail50.domain.example:50
 	\end{verbatim}
@@ -484,8 +541,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set SRV record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:sub.domain.example]
 	srv.service.proto.port.weight.prio 
 	  = sub.domain.example:PRIO:WEIGHT:PORT:PROTO:SERVICE
@@ -495,8 +552,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set DMARC entries}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:sub.domain.example]
 	dmarc.p = quarantine
 	dmarc.rua = mailto:stefan.helmert@t-online.de
@@ -513,8 +570,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set DMARC record}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:sub.domain.example]
 	dmarc =
 	dmarc.p = quarantine
@@ -524,7 +581,7 @@
 	\begin{itemize}
 		\item changes the entries \texttt{p}, \texttt{rua}, \texttt{ruf} of the \texttt{DMARC} record
 		\item remove all other entries of this record
-		\item "`atomic"' operation
+		\item atomic operation
 		\item at most one \texttt{DMARC} record allowed!
 	\end{itemize}
 \end{frame}	
@@ -532,8 +589,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set SOA entries}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:domain.example]
 	soa.hostmaster = stefan.helmert@t-online.de
 	soa.refresh = 7200
@@ -541,7 +598,7 @@
 	\begin{itemize}
 		\item changes the entries \texttt{hostmaster}, \texttt{refresh} of the \texttt{SOA} record
 		\item \texttt{primns}, \texttt{serial}, \texttt{retry}, \texttt{expire}, \texttt{ncttl} not changed
-		\item "`atomic"' operation
+		\item atomic operation
 		\item exact one \texttt{SOA} record in top level allowed!
 	\end{itemize}
 \end{frame}	
@@ -549,15 +606,15 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set SPF flags}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:domain.example]
 	spf = -mx, a, ?all, +aaaa
 	\end{verbatim}
 	\begin{itemize}
 		\item add given flags to \texttt{SPF} record
 		\item remove all other flags from \texttt{SPF} record
-		\item "`atomic"' operation
+		\item atomic operation
 		\item at most one \texttt{SPF} record is allowed!
 	\end{itemize}
 \end{frame}	
@@ -565,8 +622,8 @@
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{set ADSP and CAA records}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
-	
+	$ cat exmpl.cnf
+		
 	[domain:domain.example]
 	adsp = all
 	caa =   0 issue letsdecrypt.org,
@@ -577,17 +634,22 @@
 		\item add the \texttt{CAA} records
 		\item remove all other \texttt{CAA} records
 	\end{itemize}
+	\textbf{configured by cert handler:} 
+	\begin{verbatim}
+	[domain:domain.example]
+	caa =   auto 
+	\end{verbatim}
 \end{frame}	
 
 
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\textbf{combine stuff -- TLSA and DKIM}
 	\begin{verbatim}
-	~/cryptdomainmgr$ cat example.conf
+	$ cat exmpl.cnf
 
 	[domain:sub.domain.example]	
-	tlsa = 3 0 1, 3 1 1
-	certificate = maincert
+	tlsa.tcp.443 = auto:3:0:1, auto:2:0:1
+	cert = maincert
 	dkim = maindkim
 	\end{verbatim}
 	\textbf{prepare cycle}
@@ -651,3 +713,4 @@
 
 
 
+\grid
