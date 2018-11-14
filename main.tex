@@ -16,7 +16,7 @@
 \usepackage[ngerman]{babel}
 \usepackage[utf8]{inputenc}
 \usepackage{graphics}
-\usepackage{tikz}
+\usetikzlibrary{positioning}
 \usepackage[decimalsymbol=comma]{siunitx}
 \usepackage{amsmath}
 \usepackage{ziffer}
@@ -278,6 +278,30 @@
 	\end{frame}
 		
 	\section{Cryptdomainmgr}
+	\subsection{dataflow}
+	\begin{frame}{\insertsection}{\insertsubsection}
+	\textbf{Infrastructure as Code!}\\ \bigskip
+	\begin{tikzpicture}[
+	invisiblenode/.style={minimum size=5mm},
+	slidenode/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum size=6mm},
+	nonode/.style={circle, fill=green!5, very thick, minimum size=7mm},
+	roundnode/.style={circle, draw=red!60, fill=red!5, very thick, minimum size=11mm},
+	squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+	]
+	%Nodes
+	\node[slidenode]    (slide1)                {DNS-Server};
+	\node[slidenode]    (slide2) [right=of slide1]                  {Web-/Mailserver};	
+	\node[slidenode]    (slide3) [right=of slide2]                  {CA};
+	\node[squarednode] (neuron) [below=of slide2]                       {Cryptdomainmgr};	\node[invisiblenode]    (arl) [right=of neuron]               {};
+	\node[nonode]    (out)    [below=of neuron]                    {Configuration};		\node[invisiblenode]    (arr) [right=of arl]               {};
+	%Lines
+	\draw[->] (slide3.south) .. controls +(down:10mm) and +(right:10mm) .. (neuron.east) node[midway,sloped] {\shortstack{\bigskip \\ Certificate}};
+	\draw[<-] (slide2.south) -- (neuron.north)  node[rotate=90, midway,sloped] {\shortstack{Cert, DKIM}};
+	\draw[<-] (slide1.south) .. controls +(down:10mm) and +(left:10mm) .. (neuron.west) node[midway,sloped] {\shortstack{\bigskip \\ Update Records}};	
+	\draw[<-] (neuron.south) -- (out.north);
+	\end{tikzpicture}		
+	\end{frame}
+		
 	\subsection{autorenew process}
 	\begin{frame}{\insertsection}{\insertsubsection}
 		\begin{itemize}
