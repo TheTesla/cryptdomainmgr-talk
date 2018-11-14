@@ -671,21 +671,38 @@ child { node [file] {cdmconfighandler.py}};
 \subsection{cryptdomainmgr}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{description}
-		\item[cryptdomainmgr.py] core, brings everything together
+		\item[\_\_main\_\_.py] command line interface
+		\item[cdmcore.py] core, brings everything together
 		\item[cdmconfighandler.py] reads/interpretes config (ini) files
-		\item[update.py] command line interface for generic DNS update
-		\item[prepare.py] command line interface for prepare cycle
-		\item[rollover.py] command line interface for rollover cycle
-		\item[cleanup.py] command line interface for cleanup cycle
-		\item[simplelogger/] logging abstraction, password $\rightarrow$ *****
-		\item[dnsuptools/] domrobot interface abstraction, TLSA, DKIM calculation
-	\end{description}	
+		\item[cdmstatehandler.py] manages dependencies, data transport, next run phase
+		\item[modules/] plugins handling/interfacing dns update, certificate renewal, dkim renewal, service reload
+	\end{description}
+	
+	\textbf{external packages:}
+	\begin{description}
+		\item[simpleloggerplus] logging abstraction, password $\rightarrow$ *****
+		\item[dnsuptools] domrobot interface abstraction, TLSA, DKIM calculation
+	\end{description}
 \end{frame}	
 
-\subsection{simplelogger} \label{sec:simplelogger}
+\subsection{modules}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{description}
-		\item[simplelogger.py] core, produces output
+		\item[modules/cert/main.py] interface to handler, some helpers
+		\item[modules/cert/handlerdehydrated.py] interface todehydrated to create certificate
+		\item[modules/cert/confighandler.py] interpretes corrspondig parts of the config file
+	\end{description}
+	\textbf{external package:}
+	\begin{description}
+		\item[dehydrated] handles acme api for letsencrypt
+	\end{description}	
+
+\end{frame}	
+
+\subsection{simpleloggerplus} \label{sec:simplelogger}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
+	\begin{description}
+		\item[simpleloggerplus.py] core, produces output
 		\item[deepops.py] deep dict/list operations, password $\rightarrow$ *****
 	\end{description}	
 \end{frame}	
@@ -694,11 +711,16 @@ child { node [file] {cdmconfighandler.py}};
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{description}
 		\item[dnsuptools.py] core, high level, record change \& query methods
-		\item[dnsupdate.py] interface to domrobot, low level
+		\item[dnsupdate.py] interface to wrapper, low level
+		\item[inwxwrapper.py] interface to internetworx api, lowest level
 		\item[dkimrecgen.py] reads/interpretes dkim key file
 		\item[tlsarecgen.py] reads/interpretes certificate file
-		\item[simplelogger/] see simplelogger \ref{sec:simplelogger}
-		\item[inwxclient/] domrobot client
+		\item[dnshelpers.py] one helper function
+	\end{description}
+	\textbf{external packages:}	
+	\begin{description}
+		\item[simpleloggerplus] see simplelogger \ref{sec:simplelogger}
+		\item[inwxclient] domrobot client
 	\end{description}	
 \end{frame}	
 
