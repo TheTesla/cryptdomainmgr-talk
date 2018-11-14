@@ -709,6 +709,27 @@ child { node [file] {cdmconfighandler.py}};
 	\end{description}
 \end{frame}	
 
+	\begin{frame}{\insertsection}{\insertsubsection}
+		\textbf{Reactive:} Domain update depends on TLSA record calculated based on new certificate. \\ \bigskip
+		\begin{tikzpicture}[
+		invisiblenode/.style={minimum size=5mm},
+		slidenode/.style={rectangle, draw=blue!60, fill=blue!5, very thick, minimum size=6mm},
+		nonode/.style={circle, fill=green!5, very thick, minimum size=7mm},
+		roundnode/.style={circle, draw=red!60, fill=red!5, very thick, minimum size=11mm},
+		squarednode/.style={rectangle, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+		dashednode/.style={rectangle, dashed, draw=red!60, fill=red!5, very thick, minimum size=5mm},
+		]
+		%Nodes
+		\node[slidenode]    (cert)                {Certificate Update};
+		\node[dashednode]    (wait) [below=of cert]               {Update Domain};
+		\node[slidenode]    (domain) [right=of wait]                  {Update Domain};
+		\node[invisiblenode]		(modcert) [left=of cert, text width=2.5cm] {\textbf{modules/cert}};
+		\node[invisiblenode]		(moddomain) [below=of modcert, text width=2.5cm] {\textbf{modules/domain}};
+		%Lines
+		\draw[->] (cert.east) .. controls +(right:9mm) and +(left:9mm) .. (domain.west) node [midway,sloped, rotate=180] {\shortstack{\\ \bigskip TLSA}} ;
+		\end{tikzpicture}		
+	\end{frame}
+
 \subsection{modules}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{description}
@@ -723,7 +744,7 @@ child { node [file] {cdmconfighandler.py}};
 
 \end{frame}	
 
-\subsection{simpleloggerplus} \label{sec:simplelogger}
+\subsection{simpleloggerplus} \label{sec:simpleloggerplus}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{description}
 		\item[simpleloggerplus.py] core, produces output
@@ -743,7 +764,7 @@ child { node [file] {cdmconfighandler.py}};
 	\end{description}
 	\textbf{external packages:}	
 	\begin{description}
-		\item[simpleloggerplus] see simplelogger \ref{sec:simplelogger}
+		\item[simpleloggerplus] see simpleloggerplus \ref{sec:simpleloggerplus}
 		\item[inwxclient] domrobot client
 	\end{description}	
 \end{frame}	
