@@ -24,6 +24,7 @@
 \usepackage{color, colortbl}
 \usepackage{ulem}
 \usepackage{multicol}
+\usepackage{qrcode}
 
 
 % There are many different themes available for Beamer. A comprehensive
@@ -399,31 +400,34 @@ child { node [file] {cdmconfighandler.py}};
 	};
 	\end{tikzpicture}
 \end{frame}	
-	
+
+\section{Usage}
+\begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragiel: no indentation allowed
+	\url{www.entroserv.de/de/offene-software/cryptdomainmgr}\\
+	\qrcode{www.entroserv.de/de/offene-software/cryptdomainmgr}
+\end{frame}		
+
 \subsection{update cycle}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragiel: no indentation allowed
-	\textbf{update -- set a, aaaa, srv, dmarc, spf, adsp}
+	\textbf{update -- set static entries: a, aaaa, srv, dmarc, spf, adsp}
 	\begin{verbatim}
 	$ python -m cryptdomainmgr --update cred.cnf exmpl.cnf
 	\end{verbatim}
 	\vspace{0.3cm}
-	\textbf{prepare cycle -- generate Cert, TLSA, DKIM}
+	
+	\textbf{prepare, rollover, cleanup cycle -- renew cryptographic material: certificate, TLSA, DKIM}
+	\begin{verbatim}
+	$ python -m cryptdomainmgr cred.cnf exmpl.cnf
+	\end{verbatim}
+	\vspace{0.3cm}
+	\textbf{explicit cycle}
 	\begin{verbatim}
 	$ python -m cryptdomainmgr --prepare cred.cnf exmpl.cnf
-	\end{verbatim}
-	\vspace{0.3cm}
-	\textbf{rollover cycle -- use Cert, TLSA, DKIM}
-	\begin{verbatim}
 	$ python -m cryptdomainmgr --rollover cred.cnf exmpl.cnf
-	\end{verbatim}
-	\vspace{0.3cm}
-	\textbf{cleanup cycle -- remove outdated}
-	\begin{verbatim}
 	$ python -m cryptdomainmgr --cleanup cred.cnf exmpl.cnf
 	\end{verbatim}
 \end{frame}	
 
-\section{Configuration}
 \subsection{DNS credential}
 \begin{frame}[fragile]{\insertsection}{\insertsubsection} % fragile: no indentation allowed
 	\begin{verbatim}
@@ -466,8 +470,6 @@ child { node [file] {cdmconfighandler.py}};
 	[dkim:maindkim]
 	signingConfTemplateFile
 	  = /etc/cryptdomainmgr/dkim_signing_template.conf
-	signingConfTemporaryFile
-	  = /etc/rspamd/dkim_signing_new.conf
 	signingConfDestinationFile
 	  = /etc/rspamd/local.d/dkim_signing.conf
 	\end{verbatim}
